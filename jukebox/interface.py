@@ -59,8 +59,7 @@ context = {
         'header_text_color':[255,255,255]
         }
 
-title = """Tokyo HackerSpace Entertainment System
-Don't try this at home, this is what the hackerspace is for!"""
+title = """Tokyo HackerSpace Entertainment System"""
  
 message="""My IP address is 192.168.1.20
 I am a MPD daemon. Yeah baby }:) 
@@ -74,7 +73,7 @@ Touch this screen if you need some badger support."""
 running = True
 while running:
     clock.tick(60)
-    pos = RenderText(screen,title, [0,0], {'align-center':"",'bold':"",'font':font_big})
+    pos = RenderText(screen,title, [0,200], {'align-center':"",'bold':"",'font':font_big})
     RenderText(screen,message, [pos[0],pos[1]+200])
 
 
