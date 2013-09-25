@@ -27,6 +27,7 @@ font.set_bold(False)
 # Handlers
 
 def RenderText(screen, text, xy=[0,0], style={}):
+    _xy=xy
     if "font" in style.keys():
         _font = style["font"]
     else:
@@ -39,12 +40,12 @@ def RenderText(screen, text, xy=[0,0], style={}):
     for l in text.split("\n"):
         ts = _font.render(l, 1, (255,255,255))
         if 'align-center' in style.keys():
-            xy[0]=ts.get_rect(centerx=screen.get_width()/2)[0]
+            _xy[0]=ts.get_rect(centerx=screen.get_width()/2)[0]
         else:
-            xy[0] = 0
+            _xy[0] = xy[0]
         screen.blit(ts, xy)
-        xy[1] += ts.get_height()
-    return xy
+        _xy[1] += ts.get_height()
+    return _xy
 def OnClick(event):
     context['header_text_color'][0] = 255-context['header_text_color'][0] 
     try:
@@ -74,7 +75,7 @@ running = True
 while running:
     clock.tick(60)
     pos = RenderText(screen,title, [0,200], {'align-center':"",'bold':"",'font':font_big})
-    RenderText(screen,message, [pos[0],pos[1]+200])
+    RenderText(screen,message, [150,pos[1]+200])
 
 
     for event in pygame.event.get():
