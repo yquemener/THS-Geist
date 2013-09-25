@@ -21,6 +21,11 @@ font = pygame.font.Font(None, 36)
 
 # Handlers
 
+def TextRendering(screen, text, xy=[0,0]):
+    for l in text.split("\n"):
+        ts = font.render(l, 1, (255,255,255))
+        screen.blit(text, xy)
+        xy[1] += ts.get_height()
 
 def OnClick(event):
     context['header_text_color'][0] = 255-context['header_text_color'][0] 
@@ -39,9 +44,7 @@ context = {
 running = True
 while running:
     clock.tick(60)
-    text = font.render("Tokyo HackerSpace Entertainment System", 1, context['header_text_color'])
-    textpos = text.get_rect(centerx=screen.get_width()/2, centery=100)
-    screen.blit(text, textpos)
+    RenderText(screen,"Tokyo HackerSpace Entertainment System\nDon't try this at home: this is what the hackerspace is for!")
 
     for event in pygame.event.get():
         if event.type == QUIT or event.type == KEYDOWN:
