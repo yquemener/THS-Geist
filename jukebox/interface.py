@@ -21,7 +21,7 @@ font = pygame.font.Font(None, 36)
 
 # Handlers
 
-def TextRendering(screen, text, xy=[0,0]):
+def RenderText(screen, text, xy=[0,0]):
     for l in text.split("\n"):
         ts = font.render(l, 1, (255,255,255))
         screen.blit(text, xy)
@@ -41,10 +41,12 @@ context = {
         'header_text_color':[255,255,255]
         }
 
+message = """Tokyo HackerSpace Entertainment System
+Don't try this at home: this is what the hackerspace is for!"""
 running = True
 while running:
     clock.tick(60)
-    RenderText(screen,"Tokyo HackerSpace Entertainment System\nDon't try this at home: this is what the hackerspace is for!")
+    RenderText(screen,message)
 
     for event in pygame.event.get():
         if event.type == QUIT or event.type == KEYDOWN:
