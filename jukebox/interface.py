@@ -179,18 +179,36 @@ def OnClickBadger(evt):
         pass
     return 
 
+def OnClickKJing(evt):
+    print "CLICK KJING"
+    if(context["current_screen"]["name"]=="kjing"):
+        context["current_screen"]["name"]="main"
+        context['current_screen']['OnClick']=OnClickMainScreen
+        context['current_screen']['OnDraw']=DrawMainScreen
+        context['current_screen']['OnFlip']=pygame.display.flip
+        os.system("sudo killall ./kjing")
+        return
+    os.system("sudo ./kjing")
+    context['current_screen']['name']="kjing"
+    context['current_screen']['OnClick']=OnClickKJing
+    context['current_screen']['OnDraw']=lambda x:0
+    context['current_screen']['OnFlip']=lambda:0
+    return
+
 def OnClickNMAP(evt):
     print "CLICK NMAP"
     if(context["current_screen"]["name"]=="nmap"):
         context["current_screen"]["name"]="main"
         context['current_screen']['OnClick']=OnClickMainScreen
         context['current_screen']['OnDraw']=DrawMainScreen
+        context['current_screen']['OnFlip']=pygame.display.flip
         os.system("sudo killall nmap")
         os.system("sudo rm log")
         return
     context['current_screen']['name']="nmap"
     context['current_screen']['OnClick']=OnClickNMAP
     context['current_screen']['OnDraw']=DrawNMAP
+    context['current_screen']['OnFlip']=pygame.display.flip
     return
 
 def DrawNMAP(screen):
@@ -230,7 +248,7 @@ def DrawNMAP(screen):
 def DrawMainScreen(screen):
     screen.fill((0,0,0))
     pos = RenderText(screen,title, [0,200], {'align-center':"",'bold':"",'font':font_big})
-    RenderText(screen,message, [150,pos[1]+200])
+    RenderText(screen,message, [150,pos[1]+50])
     for b in buttons:
         b.draw(screen)
     return
@@ -254,9 +272,11 @@ running = True
 
 buttons.append(Button(20,800,400,200, text="Badger help", handler=OnClickBadger))
 buttons.append(Button(480,800,400,200, text="Network scanning", handler=OnClickNMAP))
+buttons.append(Button(480,550,400,200, text="KJing", handler=OnClickKJing))
 
 context['current_screen']['OnClick']=OnClickMainScreen
 context['current_screen']['OnDraw']=DrawMainScreen
+context['current_screen']['OnFlip']=pygame.display.flip
 context['current_screen']['name']="main"
 while running:
     clock.tick(60)
@@ -266,7 +286,7 @@ while running:
         running=False
     elif event.type == MOUSEBUTTONDOWN:
         context['current_screen']['OnClick'](event)
-    pygame.display.flip()
+    context['current_screen']['OnFlip']()
 
 
 
