@@ -6,6 +6,7 @@ import sys
 from pyomxplayer import *
 import pygame
 from pygame.locals import *
+import random
 
 class Button():
     def __init__(self, x,y,w,h, text="", handler=None):
@@ -54,6 +55,20 @@ def NmapParser(s):
             brand = " ".join(l.split(" ")[3:]).rstrip(")").lstrip("(")
             hosts[host]["mac"] = mac
             hosts[host]["brand"] = brand
+    for h in hosts.keys():
+        for k in net_knowledge:
+            if k[0]=='ip':
+                if k[1]==h:
+                    hosts[h]['id_name']=k[2]
+                    hosts[h]['id_text']=k[3]
+            if k[0]=='mac' and hosts[h].has_key("mac"):
+                if k[1]==hosts[h]["mac"]:
+                    hosts[h]['id_name']=k[2]
+                    hosts[h]['id_text']=k[3]
+    with open("log2","w") as l:
+        l.write(str(net_knowledge))
+        l.write('\n')
+        l.write(str(hosts))
     return hosts
 
 def InitFramebuffer():
@@ -132,6 +147,14 @@ font.set_bold(False)
 pygame.mouse.set_visible(False)
 #pygame.event.set_grab(True)
 buttons=[]
+net_knowledge=[]
+with open("knownmachines","r") as f:
+    for l in f:
+        print l
+        arr=l.split(";")
+        print arr
+        net_knowledge.append((arr[0].rstrip().lstrip(), arr[1].rstrip().lstrip(), arr[2].rstrip().lstrip(),arr[3].rstrip().lstrip()))
+        
 
 # Handlers
 
@@ -183,7 +206,12 @@ def DrawNMAP(screen):
         
         for host in lst:
             message+=host+"   "
-            if d[host].has_key("brand"):
+            if d[host].has_key("id_text") and len(d[host]["id_text"])>0:
+                message+=d[host]["id_text"]
+            elif d[host].has_key("id_name"):
+                #message+=random.choice(("smells like ","feels like ", "looks like ", ""))+d[host]["id_name"]
+                message+=d[host]["id_name"]
+            elif d[host].has_key("brand"):
                 message+=d[host]['brand']
             else:
                 message += "unknown"
