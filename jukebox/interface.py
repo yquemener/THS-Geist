@@ -278,14 +278,18 @@ context['current_screen']['OnClick']=OnClickMainScreen
 context['current_screen']['OnDraw']=DrawMainScreen
 context['current_screen']['OnFlip']=pygame.display.flip
 context['current_screen']['name']="main"
+dbg = 10
+
 while running:
     clock.tick(60)
+    dbg+=1
     context['current_screen']['OnDraw'](screen)
     event = pygame.event.poll()
     if event.type == QUIT or event.type == KEYDOWN:
         running=False
     elif event.type == MOUSEBUTTONDOWN:
         context['current_screen']['OnClick'](event)
+    rectangle(screen, (dbg,dbg,dbg), Rect(0,0,100,10),0)
     context['current_screen']['OnFlip']()
 
 
