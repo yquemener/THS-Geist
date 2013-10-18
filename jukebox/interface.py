@@ -197,7 +197,6 @@ def OnClickBadger(evt):
 def OnClickKJing(evt):
     global kjing_process
     print "CLICK KJING"
-    
     if(context["current_screen"]["name"]=="kjing"):
         context["current_screen"]["name"]="main"
         context['current_screen']['OnClick']=OnClickMainScreen
@@ -214,6 +213,7 @@ def OnClickKJing(evt):
     context['current_screen']['OnFlip']=lambda:0
     kjing_process = pexpect.spawn("/usr/bin/python /home/pi/Geist/kjing-raspi/client.py")
     return
+
 
 def OnClickNMAP(evt):
     print "CLICK NMAP"
