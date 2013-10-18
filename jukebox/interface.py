@@ -7,6 +7,15 @@ from pyomxplayer import *
 import pygame
 from pygame.locals import *
 import random
+import pexpect
+
+SHOW_MOUSE=False
+INVERT_MOUSE=True
+
+# Debug settings:
+SHOW_MOUSE=True
+INVERT_MOUSE=False
+
 
 class Button():
     def __init__(self, x,y,w,h, text="", handler=None):
@@ -135,8 +144,8 @@ if len(sys.argv)>1 and sys.argv[1]=="nofs":
 
 pygame.init()
 if fullscreen:
-    #screen = InitFramebuffer()
-    screen = pygame.display.set_mode((1280, 1024), pygame.FULLSCREEN)
+    screen = InitFramebuffer()
+    #screen = pygame.display.set_mode((1280, 1024), pygame.FULLSCREEN)
 else:
     screen = pygame.display.set_mode((1280, 1024))
 
@@ -144,10 +153,12 @@ clock = pygame.time.Clock()
 font = pygame.font.Font(None, 36)
 font_big = pygame.font.Font(None, 50)
 font.set_bold(False)
-pygame.mouse.set_visible(False)
+pygame.mouse.set_visible(SHOW_MOUSE)
 #pygame.event.set_grab(True)
 buttons=[]
 net_knowledge=[]
+kjing_process = None
+
 with open("knownmachines","r") as f:
     for l in f:
         print l
@@ -161,8 +172,12 @@ with open("knownmachines","r") as f:
 def OnClickMainScreen(event):
     found=False
     print event.pos
-    newx = int((1024.0-event.pos[0])*1280.0/1024.0)
-    newy = int((768.0-event.pos[1])*1024.0/768.0)
+    if(INVERT_MOUSE):
+        newx = int((1024.0-event.pos[0])*1280.0/1024.0)
+        newy = int((768.0-event.pos[1])*1024.0/768.0)
+    else:
+        newx = event.pos[0]
+        newy = event.pos[1]
     epos = (newx, newy)
     print epos
     for b in buttons:
@@ -180,19 +195,24 @@ def OnClickBadger(evt):
     return 
 
 def OnClickKJing(evt):
+    global kjing_process
     print "CLICK KJING"
+    
     if(context["current_screen"]["name"]=="kjing"):
         context["current_screen"]["name"]="main"
         context['current_screen']['OnClick']=OnClickMainScreen
         context['current_screen']['OnDraw']=DrawMainScreen
         context['current_screen']['OnFlip']=pygame.display.flip
-        os.system("sudo killall ./kjing")
+        #os.system("sudo killall ./kjing")
+        if kjing_process!=None:
+            kjing_process.kill(9)
         return
-    os.system("sudo ./kjing")
+    #os.system("./kjing &")
     context['current_screen']['name']="kjing"
     context['current_screen']['OnClick']=OnClickKJing
     context['current_screen']['OnDraw']=lambda x:0
     context['current_screen']['OnFlip']=lambda:0
+    kjing_process = pexpect.spawn("/usr/bin/python /home/pi/Geist/kjing-raspi/client.py")
     return
 
 def OnClickNMAP(evt):
@@ -280,16 +300,18 @@ context['current_screen']['OnFlip']=pygame.display.flip
 context['current_screen']['name']="main"
 dbg = 10
 
+
+
 while running:
     clock.tick(60)
-    dbg+=1
+    dbg = (dbg+10)%256
     context['current_screen']['OnDraw'](screen)
     event = pygame.event.poll()
     if event.type == QUIT or event.type == KEYDOWN:
         running=False
     elif event.type == MOUSEBUTTONDOWN:
         context['current_screen']['OnClick'](event)
-    rectangle(screen, (dbg,dbg,dbg), Rect(0,0,100,10),0)
+    pygame.draw.rect(screen, (dbg,dbg,dbg), Rect(0,0,100,10),0)
     context['current_screen']['OnFlip']()
 
 
