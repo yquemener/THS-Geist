@@ -13,9 +13,9 @@ SHOW_MOUSE=False
 INVERT_MOUSE=True
 
 # Debug settings:
-SHOW_MOUSE=True
+"""SHOW_MOUSE=True
 INVERT_MOUSE=False
-
+"""
 
 class Button():
     def __init__(self, x,y,w,h, text="", handler=None):
