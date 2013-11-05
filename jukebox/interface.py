@@ -12,10 +12,17 @@ import pexpect
 SHOW_MOUSE=False
 INVERT_MOUSE=True
 
+"""
 # Debug settings:
+<<<<<<< HEAD
 """SHOW_MOUSE=True
 INVERT_MOUSE=False"""
 
+=======
+SHOW_MOUSE=True
+INVERT_MOUSE=False
+"""
+>>>>>>> 3c4048237c05028b6206c1396fa9dc74dec52ee4
 
 class Button():
     def __init__(self, x,y,w,h, text="", handler=None):
@@ -158,6 +165,7 @@ pygame.mouse.set_visible(SHOW_MOUSE)
 buttons=[]
 net_knowledge=[]
 kjing_process = None
+qrpass_surface = pygame.image.load("thspass.png")
 
 with open("knownmachines","r") as f:
     for l in f:
@@ -271,6 +279,7 @@ def DrawMainScreen(screen):
     RenderText(screen,message, [150,pos[1]+50])
     for b in buttons:
         b.draw(screen)
+    screen.blit(qrpass_surface, pygame.Rect(1100,80,87,87))
     return
 
 # Mainloop
