@@ -12,8 +12,9 @@ import pexpect
 SHOW_MOUSE=False
 INVERT_MOUSE=True
 
+"""
 # Debug settings:
-"""SHOW_MOUSE=True
+SHOW_MOUSE=True
 INVERT_MOUSE=False
 """
 
@@ -272,7 +273,7 @@ def DrawMainScreen(screen):
     RenderText(screen,message, [150,pos[1]+50])
     for b in buttons:
         b.draw(screen)
-    screen.blit(qrpass_surface, pygame.Rect(500,100,87,87))
+    screen.blit(qrpass_surface, pygame.Rect(1100,80,87,87))
     return
 
 # Mainloop
