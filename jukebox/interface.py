@@ -283,13 +283,22 @@ context = {
 
 title = """Tokyo HackerSpace Entertainment System"""
  
-message="""My IP address is 192.168.1.20
-I am a MPD daemon. Yeah baby }:) 
-You can access it through the default port (6600) with clients like gmpc.
- 
-You can ssh me as user 'pi' with the password 'raspberry'.
-To make me play a video, ssh me and use the command line "omxplayer <mp4 file>". 
-There are some files in Videos/ you are welcomed to add more."""
+#message="""My IP address is 192.168.1.20
+#I am a MPD daemon. Yeah baby }:) 
+#You can access it through the default port (6600) with clients like gmpc.
+# 
+#You can ssh me as user 'pi' with the password 'raspberry'.
+#To make me play a video, ssh me and use the command line "omxplayer <mp4 file>". 
+#There are some files in Videos/ you are welcomed to add more."""
+
+message="""To connect to wifi, use the 'THS' network. 
+The password is 38717383
+You can also get it by scanning the QR code on the corner.
+
+Once you are connected, you can go to http://192.168.1.42/ to have information
+about what's in the network"""
+
+
 running = True
 
 buttons.append(Button(20,800,400,200, text="Badger help", handler=OnClickBadger))
