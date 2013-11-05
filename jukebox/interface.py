@@ -158,6 +158,7 @@ pygame.mouse.set_visible(SHOW_MOUSE)
 buttons=[]
 net_knowledge=[]
 kjing_process = None
+qrpass_surface = pygame.image.load("thspass.png")
 
 with open("knownmachines","r") as f:
     for l in f:
@@ -271,6 +272,7 @@ def DrawMainScreen(screen):
     RenderText(screen,message, [150,pos[1]+50])
     for b in buttons:
         b.draw(screen)
+    screen.blit(qrpass_surface, pygame.Rect(500,100,87,87))
     return
 
 # Mainloop
