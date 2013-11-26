@@ -296,7 +296,7 @@ The password is 38717383
 You can also get it by scanning the QR code on the corner.
 
 Once you are connected, you can go to http://192.168.1.42/ to have information
-about what's in the network"""
+about what's on the network"""
 
 
 running = True
