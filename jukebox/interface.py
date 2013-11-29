@@ -6,6 +6,16 @@ import sys
 from pyomxplayer import *
 import pygame
 from pygame.locals import *
+import random
+import pexpect
+
+SHOW_MOUSE=False
+INVERT_MOUSE=True
+
+"""
+SHOW_MOUSE=True
+INVERT_MOUSE=False
+"""
 
 class Button():
     def __init__(self, x,y,w,h, text="", handler=None):
@@ -54,6 +64,20 @@ def NmapParser(s):
             brand = " ".join(l.split(" ")[3:]).rstrip(")").lstrip("(")
             hosts[host]["mac"] = mac
             hosts[host]["brand"] = brand
+    for h in hosts.keys():
+        for k in net_knowledge:
+            if k[0]=='ip':
+                if k[1]==h:
+                    hosts[h]['id_name']=k[2]
+                    hosts[h]['id_text']=k[3]
+            if k[0]=='mac' and hosts[h].has_key("mac"):
+                if k[1]==hosts[h]["mac"]:
+                    hosts[h]['id_name']=k[2]
+                    hosts[h]['id_text']=k[3]
+    with open("log2","w") as l:
+        l.write(str(net_knowledge))
+        l.write('\n')
+        l.write(str(hosts))
     return hosts
 
 def InitFramebuffer():
@@ -120,8 +144,8 @@ if len(sys.argv)>1 and sys.argv[1]=="nofs":
 
 pygame.init()
 if fullscreen:
-    #screen = InitFramebuffer()
-    screen = pygame.display.set_mode((1280, 1024), pygame.FULLSCREEN)
+    screen = InitFramebuffer()
+    #screen = pygame.display.set_mode((1280, 1024), pygame.FULLSCREEN)
 else:
     screen = pygame.display.set_mode((1280, 1024))
 
@@ -129,17 +153,32 @@ clock = pygame.time.Clock()
 font = pygame.font.Font(None, 36)
 font_big = pygame.font.Font(None, 50)
 font.set_bold(False)
-pygame.mouse.set_visible(False)
+pygame.mouse.set_visible(SHOW_MOUSE)
 #pygame.event.set_grab(True)
 buttons=[]
+net_knowledge=[]
+kjing_process = None
+qrpass_surface = pygame.image.load("thspass.png")
+
+with open("knownmachines","r") as f:
+    for l in f:
+        print l
+        arr=l.split(";")
+        print arr
+        net_knowledge.append((arr[0].rstrip().lstrip(), arr[1].rstrip().lstrip(), arr[2].rstrip().lstrip(),arr[3].rstrip().lstrip()))
+        
 
 # Handlers
 
 def OnClickMainScreen(event):
     found=False
     print event.pos
-    newx = int((1024.0-event.pos[0])*1280.0/1024.0)
-    newy = int((768.0-event.pos[1])*1024.0/768.0)
+    if(INVERT_MOUSE):
+        newx = int((1024.0-event.pos[0])*1280.0/1024.0)
+        newy = int((768.0-event.pos[1])*1024.0/768.0)
+    else:
+        newx = event.pos[0]
+        newy = event.pos[1]
     epos = (newx, newy)
     print epos
     for b in buttons:
@@ -156,18 +195,41 @@ def OnClickBadger(evt):
         pass
     return 
 
+def OnClickKJing(evt):
+    global kjing_process
+    print "CLICK KJING"
+    
+    if(context["current_screen"]["name"]=="kjing"):
+        context["current_screen"]["name"]="main"
+        context['current_screen']['OnClick']=OnClickMainScreen
+        context['current_screen']['OnDraw']=DrawMainScreen
+        context['current_screen']['OnFlip']=pygame.display.flip
+        #os.system("sudo killall ./kjing")
+        if kjing_process!=None:
+            kjing_process.kill(9)
+        return
+    #os.system("./kjing &")
+    context['current_screen']['name']="kjing"
+    context['current_screen']['OnClick']=OnClickKJing
+    context['current_screen']['OnDraw']=lambda x:0
+    context['current_screen']['OnFlip']=lambda:0
+    kjing_process = pexpect.spawn("/usr/bin/python /home/pi/Geist/kjing-raspi/client.py")
+    return
+
 def OnClickNMAP(evt):
     print "CLICK NMAP"
     if(context["current_screen"]["name"]=="nmap"):
         context["current_screen"]["name"]="main"
         context['current_screen']['OnClick']=OnClickMainScreen
         context['current_screen']['OnDraw']=DrawMainScreen
+        context['current_screen']['OnFlip']=pygame.display.flip
         os.system("sudo killall nmap")
         os.system("sudo rm log")
         return
     context['current_screen']['name']="nmap"
     context['current_screen']['OnClick']=OnClickNMAP
     context['current_screen']['OnDraw']=DrawNMAP
+    context['current_screen']['OnFlip']=pygame.display.flip
     return
 
 def DrawNMAP(screen):
@@ -183,7 +245,12 @@ def DrawNMAP(screen):
         
         for host in lst:
             message+=host+"   "
-            if d[host].has_key("brand"):
+            if d[host].has_key("id_text") and len(d[host]["id_text"])>0:
+                message+=d[host]["id_text"]
+            elif d[host].has_key("id_name"):
+                #message+=random.choice(("smells like ","feels like ", "looks like ", ""))+d[host]["id_name"]
+                message+=d[host]["id_name"]
+            elif d[host].has_key("brand"):
                 message+=d[host]['brand']
             else:
                 message += "unknown"
@@ -202,9 +269,10 @@ def DrawNMAP(screen):
 def DrawMainScreen(screen):
     screen.fill((0,0,0))
     pos = RenderText(screen,title, [0,200], {'align-center':"",'bold':"",'font':font_big})
-    RenderText(screen,message, [150,pos[1]+200])
+    RenderText(screen,message, [150,pos[1]+50])
     for b in buttons:
         b.draw(screen)
+    screen.blit(qrpass_surface, pygame.Rect(1100,80,87,87))
     return
 
 # Mainloop
@@ -215,30 +283,47 @@ context = {
 
 title = """Tokyo HackerSpace Entertainment System"""
  
-message="""My IP address is 192.168.1.20
-I am a MPD daemon. Yeah baby }:) 
-You can access it through the default port (6600) with clients like gmpc.
- 
-You can ssh me as user 'pi' with the password 'raspberry'.
-To make me play a video, ssh me and use the command line "omxplayer <mp4 file>". 
-There are some files in Videos/ you are welcomed to add more."""
+#message="""My IP address is 192.168.1.20
+#I am a MPD daemon. Yeah baby }:) 
+#You can access it through the default port (6600) with clients like gmpc.
+# 
+#You can ssh me as user 'pi' with the password 'raspberry'.
+#To make me play a video, ssh me and use the command line "omxplayer <mp4 file>". 
+#There are some files in Videos/ you are welcomed to add more."""
+
+message="""To connect to wifi, use the 'THS' network. 
+The password is 38717383
+You can also get it by scanning the QR code on the corner.
+
+Once you are connected, you can go to http://192.168.1.42/ to have information
+about what's on the network"""
+
+
 running = True
 
 buttons.append(Button(20,800,400,200, text="Badger help", handler=OnClickBadger))
 buttons.append(Button(480,800,400,200, text="Network scanning", handler=OnClickNMAP))
+buttons.append(Button(480,550,400,200, text="KJing", handler=OnClickKJing))
 
 context['current_screen']['OnClick']=OnClickMainScreen
 context['current_screen']['OnDraw']=DrawMainScreen
+context['current_screen']['OnFlip']=pygame.display.flip
 context['current_screen']['name']="main"
+dbg = 10
+
+
+
 while running:
     clock.tick(60)
+    dbg = (dbg+10)%256
     context['current_screen']['OnDraw'](screen)
     event = pygame.event.poll()
     if event.type == QUIT or event.type == KEYDOWN:
         running=False
     elif event.type == MOUSEBUTTONDOWN:
         context['current_screen']['OnClick'](event)
-    pygame.display.flip()
+    pygame.draw.rect(screen, (dbg,dbg,dbg), Rect(0,0,100,10),0)
+    context['current_screen']['OnFlip']()
 
 
 
