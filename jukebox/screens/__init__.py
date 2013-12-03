@@ -1,3 +1,3 @@
-__all__ = ["MainScreen", "NMAPScreen"]
+__all__ = ["MainScreen", "NMAPScreen", "KJingScreen" "BadgersScreen"]
 
 

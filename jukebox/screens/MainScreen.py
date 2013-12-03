@@ -2,7 +2,6 @@ import os
 from Button import Button
 from RenderText import RenderText
 import pygame
-import pexpect
 
 class MainScreen:
     def __init__(self, parent):
@@ -54,16 +53,12 @@ about what's on the network"""
     def OnClickBadger(self, evt):
         try:
             os.system("killall -9 omxplayer.bin")
-            omx = OMXPlayer('/home/pi/Badgers.mp4')
         except:
             pass
         return 
 
     def OnClickKJing(self, evt):
-        self.parent.kjing_process = pexpect.spawn("/usr/bin/python /home/pi/Geist/kjing-raspi/client.py")
         self.parent.ChangeScreen("KJingScreen")        
-
-
 
     def OnClickNMAP(self, evt):
         self.parent.ChangeScreen("NMAPScreen")

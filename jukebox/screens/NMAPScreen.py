@@ -8,6 +8,7 @@ import os
 class NMAPScreen:
     def __init__(self, parent):
         self.net_knowledge=[]    
+        self.parent=parent
 
     def OnEnter(self):
         with open("knownmachines","r") as f:
@@ -19,12 +20,11 @@ class NMAPScreen:
 
 
     def OnDraw(self, screen):
-        print "draw nmap"
         screen.fill((0,0,0))
         pos = RenderText(screen,"NMAP results", [0,200], {'align-center':"",'bold':"",'font':self.parent.font_big})
         try:
             o=open("logdone","r")
-            d=Parser(o.read())
+            d=self.Parser(o.read())
             message=""
             # print d
             lst = d.keys()
@@ -64,7 +64,7 @@ class NMAPScreen:
         pygame.display.flip()
         
 
-    def Parser(s):
+    def Parser(self, s):
         hosts={}
         host=None
         for l in s.split("\n"):
@@ -88,7 +88,7 @@ class NMAPScreen:
                         hosts[h]['id_name']=k[2]
                         hosts[h]['id_text']=k[3]
         with open("log2","w") as l:
-            l.write(str(net_knowledge))
+            l.write(str(self.net_knowledge))
             l.write('\n')
             l.write(str(hosts))
         return hosts
