@@ -1,18 +1,20 @@
 import os
-from pyomxplayer import *
+import pexpect
 
 class SlideshowScreen:
     def __init__(self, parent):
         self.parent=parent
 
     def OnEnter(self):
-        os.system("fbi -T1 -t10 -a -u /home/pi/Pictures/*/*/* /home/pi/Pictures/*/*")
+        self.bg_process = pexepect.spawn("fbi -T1 -t10 -a -u /home/pi/Pictures/*/*/* /home/pi/Pictures/*/*")
 
     def OnDraw(self, screen):
         return
         
     def OnClick(self, event):
-        os.system("killall fbi")
+        if self.bg_process!=None:
+            self.bg_process.kill(9)
+        #os.system("killall fbi")
         self.parent.ChangeScreen("MainScreen")
         return
     

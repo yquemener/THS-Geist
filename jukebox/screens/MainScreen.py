@@ -10,7 +10,7 @@ class MainScreen:
         self.buttons.append(Button(self, 20,550,400,200, text="Shut that music!", handler=self.OnClickShutMusic))
         self.buttons.append(Button(self, 480,800,400,200, text="Network scanning", handler=self.OnClickNMAP))
         self.buttons.append(Button(self, 480,550,400,200, text="KJing", handler=self.OnClickKJing))
-        self.buttons.append(Button(self, 540,550,400,450, text="Slideshow", handler=self.OnClickSlideshow))
+        self.buttons.append(Button(self, 920,550,200,450, text="Slideshow", handler=self.OnClickSlideshow))
         self.title = """Tokyo HackerSpace Entertainment System"""
         self.message="""To connect to wifi, use the 'THS' network. 
 The password is 38717383
@@ -38,7 +38,7 @@ about what's on the network"""
         print epos
         os.system("killall -9 omxplayer.bin")
         os.system("killall -9 omxplayer")    
-        os.system("sudo killall fbi")    
+        os.system("killall fbi")    
 
         for b in self.buttons:
             found = found or b.testClick(epos)
