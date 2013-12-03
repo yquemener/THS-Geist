@@ -7,6 +7,7 @@ class MainScreen:
     def __init__(self, parent):
         self.buttons=[]
         self.buttons.append(Button(self, 20,800,400,200, text="Badger help", handler=self.OnClickBadger))
+        self.buttons.append(Button(self, 20,400,400,200, text="Shut that music!", handler=self.OnClickShutMusic))
         self.buttons.append(Button(self, 480,800,400,200, text="Network scanning", handler=self.OnClickNMAP))
         self.buttons.append(Button(self, 480,550,400,200, text="KJing", handler=self.OnClickKJing))
         self.title = """Tokyo HackerSpace Entertainment System"""
@@ -66,4 +67,6 @@ about what's on the network"""
     
     def OnFlip(self):
         pygame.display.flip()
-        
+       
+    def OnShutMusic(self):
+        os.system("mpc pause")
