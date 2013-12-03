@@ -22,8 +22,8 @@ class App:
         self.INVERT_MOUSE=True
 
 
-        self.SHOW_MOUSE=True
-        self.INVERT_MOUSE=False
+        #self.SHOW_MOUSE=True
+        #self.INVERT_MOUSE=False
 
 
 
