@@ -1,7 +1,7 @@
 import os
 from pyomxplayer import *
 
-class KJingScreen:
+class BadgersScreen:
     def __init__(self, parent):
         self.parent=parent
 
