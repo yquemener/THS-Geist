@@ -6,10 +6,10 @@ class BadgersScreen:
         self.parent=parent
 
     def OnEnter(self):
-        try:
-            self.omx = OMXPlayer('/home/pi/Badgers.mp4')
-        except:
-            pass
+        #try:
+        self.omx = OMXPlayer('/home/pi/Badgers.mp4')
+        #except:
+        #    pass
         return
 
     def OnDraw(self, screen):
