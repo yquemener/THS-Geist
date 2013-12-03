@@ -55,6 +55,7 @@ about what's on the network"""
             os.system("killall -9 omxplayer.bin")
         except:
             pass
+        self.parent.ChangeScreen("BadgersScreen")        
         return 
 
     def OnClickKJing(self, evt):
