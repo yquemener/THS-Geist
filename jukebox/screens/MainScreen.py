@@ -38,7 +38,7 @@ about what's on the network"""
         print epos
         os.system("killall -9 omxplayer.bin")
         os.system("killall -9 omxplayer")    
-        os.system("killall fbi")    
+        os.system("sudo killall -9 fbi")    
 
         for b in self.buttons:
             found = found or b.testClick(epos)

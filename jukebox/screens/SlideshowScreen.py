@@ -6,7 +6,7 @@ class SlideshowScreen:
         self.parent=parent
 
     def OnEnter(self):
-        self.bg_process = pexepect.spawn("fbi -T1 -t10 -a -u /home/pi/Pictures/*/*/* /home/pi/Pictures/*/*")
+        self.bg_process = pexpect.spawn("/bin/bash /home/pi/Geist/jukebox/slideshow")
 
     def OnDraw(self, screen):
         return
