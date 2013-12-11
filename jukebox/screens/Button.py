@@ -10,6 +10,7 @@ class Button():
         self.bgcolor=(5,5,5)
         self.fgcolor=(0,0,255)
         self.parent = parent
+        
 
     def draw(self, screen):
         rect = pygame.Rect(self.pos[0], self.pos[1], self.size[0], self.size[1])
