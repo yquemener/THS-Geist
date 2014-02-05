@@ -22,21 +22,20 @@ class App:
         self.INVERT_MOUSE=True
 
 
-        #self.SHOW_MOUSE=True
-        #self.INVERT_MOUSE=False
+        self.SHOW_MOUSE=True
+        self.INVERT_MOUSE=False
 
 
 
         # Init
         self.fullscreen = True
-
         if len(sys.argv)>1 and sys.argv[1]=="nofs":
             self.fullscreen=False
 
         pygame.init()
         if self.fullscreen:
-            self.screen = self.InitFramebuffer()
-            #screen = pygame.display.set_mode((1280, 1024), pygame.FULLSCREEN)
+            #self.screen = self.InitFramebuffer()
+            self.screen = pygame.display.set_mode((1280, 1024), pygame.FULLSCREEN)
         else:
             self.screen = pygame.display.set_mode((1280, 1024))
 

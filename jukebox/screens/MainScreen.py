@@ -7,9 +7,10 @@ class MainScreen:
     def __init__(self, parent):
         self.buttons=[]
         self.buttons.append(Button(self, 20,800,400,200, text="Badger help", handler=self.OnClickBadger))
-        self.buttons.append(Button(self, 20,400,400,200, text="Shut that music!", handler=self.OnClickShutMusic))
+        self.buttons.append(Button(self, 20,550,400,200, text="Shut that music!", handler=self.OnClickShutMusic))
         self.buttons.append(Button(self, 480,800,400,200, text="Network scanning", handler=self.OnClickNMAP))
         self.buttons.append(Button(self, 480,550,400,200, text="KJing", handler=self.OnClickKJing))
+        self.buttons.append(Button(self, 920,550,200,450, text="Slideshow", handler=self.OnClickSlideshow))
         self.title = """Tokyo HackerSpace Entertainment System"""
         self.message="""To connect to wifi, use the 'THS' network. 
 The password is 38717383
@@ -37,6 +38,7 @@ about what's on the network"""
         print epos
         os.system("killall -9 omxplayer.bin")
         os.system("killall -9 omxplayer")    
+        os.system("sudo killall -9 fbi")    
 
         for b in self.buttons:
             found = found or b.testClick(epos)
@@ -65,8 +67,13 @@ about what's on the network"""
     def OnClickNMAP(self, evt):
         self.parent.ChangeScreen("NMAPScreen")
     
+    def OnClickShutMusic(self,evt):
+        os.system("mpc pause")
+
+    def OnClickSlideshow(self,evt):
+        self.parent.ChangeScreen("SlideshowScreen")
+
     def OnFlip(self):
         pygame.display.flip()
        
-    def OnShutMusic(self):
-        os.system("mpc pause")
+
