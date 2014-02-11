@@ -68,7 +68,7 @@ about what's on the network"""
         self.parent.ChangeScreen("NMAPScreen")
     
     def OnClickShutMusic(self,evt):
-        os.system("mpc pause")
+        os.system("mpc toggle")
 
     def OnClickSlideshow(self,evt):
         self.parent.ChangeScreen("SlideshowScreen")
